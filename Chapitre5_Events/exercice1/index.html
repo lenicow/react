@@ -72,26 +72,6 @@
         }
     }
 
-    class Compteur2 extends React.Component {
-        constructor(){
-            super();
-        }
-
-        start = () => {
-            console.log(this.props);
-        }
-
-        render(){
-            return (
-                <div>
-                    <button onClick={this.click}>Start (+1) </button>
-                    <button onClick={this.click}>Stop </button>
-                    <button onClick={this.click}>Reset </button>
-                </div>
-            )
-        }
-    }
-
     // Rendu dans le DOM
     ReactDOM.render(
         <div>
