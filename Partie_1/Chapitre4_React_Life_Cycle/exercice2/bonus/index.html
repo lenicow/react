@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <style>
+      .complete{
+        color: red;
+      } 
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          barCount: 1
+        }
+        this.intervalID = null;
+      }
+      componentDidMount() {
+        this.intervalID = setInterval(() => {
+          this.setState({barCount:this.state.barCount+1});
+        }, this.props.delay * this.props.nbStars);
+      }
+      componentDidUpdate() {
+        if (this.state.barCount === this.props.nbLines) {
+          clearInterval(this.intervalID);
+        }
+      }
+      render() {
+        return <div>{ Array(this.state.barCount).fill().map((_,i) => <Bar key={i} nbStars={this.props.nbStars} delay={this.props.delay} />) }</div>
+      }
+    }
+
+    class Bar extends React.Component {
+
+      constructor(props) {
+        super(props);
+        this.state = {
+          count: 0,
+        }
+        this.intervalID = null;
+      }
+      componentDidMount() {
+        this.intervalID = setInterval(() => {
+          this.setState({count: this.state.count+1});
+        }, this.props.delay);
+      }
+      componentDidUpdate() {
+        if (this.state.count === this.props.nbStars) {
+          clearInterval(this.intervalID);
+        }
+      }
+      render() {
+        return <p className={this.state.count === this.props.nbStars ? 'complete' : ''}>
+          {Array(this.state.count).fill().map(() => '* ')}
+        </p>
+      }
+    }
+
+    // Rendu dans le DOM
+    ReactDOM.render(
+        <App nbLines={5} nbStars={10} delay={200} />,
+        document.getElementById('root')
+    );
+    </script>
+
+</body>
+</html>

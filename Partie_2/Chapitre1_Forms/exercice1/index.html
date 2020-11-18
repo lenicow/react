@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    class App extends React.Component {
+      render() {
+        return <div>
+          <h1>Saisie des utilisateurs</h1>
+          <Form />
+        </div>
+      }
+    }
+
+    class Form extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { value: '', users: [] };
+      }
+
+      handleChange = (event) => {
+        this.setState({ value: event.target.value.toUpperCase() });
+      }
+
+      handleSubmit = (event) => {
+        event.preventDefault();
+        if (this.state.value.trim() === "") {
+          console.error("Erreur : le champ ne doit pas rester vide");
+        }
+        else if (this.state.users.includes(this.state.value)) {
+          console.error("Erreur: nom déjà enregistré");
+          this.setState({value: ''});
+        }
+        else {
+          this.setState({users: [...this.state.users, this.state.value], value: ''});
+        }
+      }
+
+      render() {
+        return (
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              Username:
+              <input type="text" value={this.state.value} onChange={this.handleChange} />
+            </label>
+            <input type="submit" value="Add" />
+            <UserList users={this.state.users} />
+          </form>
+        );
+      }
+    }
+
+    class UserList extends React.Component {
+      render() {
+        return this.props.users.length > 0 ? 
+        <div>
+          <h3>Liste des utilisateurs</h3>
+          <ul>
+            {this.props.users.map((user, i) => <li key={i}>{user}</li>)}
+          </ul>
+        </div> :
+        <p>Aucun utilisateur pour l'instant</p>
+      }
+    }
+
+    // Rendu dans le DOM
+    ReactDOM.render(
+        <App />,
+        document.getElementById('root')
+    );
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class App extends React.Component {
+
+            render() {
+                
+                return (
+                    <Form />
+                )
+            }
+        }
+
+        class Form extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { 
+                    number: '', 
+                    multiples : [],
+                    message : '',
+                };
+            }
+
+            handleChange = (event) => {
+                const { value : number } = event.target;
+
+                this.setState({ 
+                    number : number,
+                    message : '',
+                    multiples : []
+                });
+            }
+
+            handleSubmit = (event) => {
+                event.preventDefault();
+
+                const { number } = this.state;
+
+                if( number.trim() === '' ){
+                    this.setState({ message : `Attention votre champ est vide`});
+
+                    return;
+                }
+
+                // type entier vérification
+                if( parseInt(number) != number ){
+                    this.setState({ message : `Attention ce n'est pas un entier`});
+
+                    return;
+                }
+
+                if( parseInt(number) > 100 ){
+                    this.setState({ message : `Attention ce nombre est plus grand que 100`});
+
+                    return;
+                }
+
+                if(this.state.multiples.length > 0 ){
+                    this.setState({ message : `Attention vous devez faire un nouveau choix`});
+
+                    return;
+                }
+
+                const multiples = [];
+                let multiple = number;
+                let i = 1;
+                do {
+                    multiples.push(multiple);
+                    i++;
+                    multiple = number * i;    
+                } while (multiple <= 100);
+                this.setState({multiples: multiples});
+            }
+
+            render() {
+                const { number, message, multiples } = this.state;
+
+                return (
+                    <React.Fragment>
+                        {  message && <p>{message}</p> }
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                Donnez un nombre inférieur à 100 :
+                                <select value={number} onChange={this.handleChange}>
+                                    <option value=""></option>
+                                    { Array(11).fill().map((_,i) => <option value={i+1} key={i}>{i+1}</option>) }
+                                </select>
+                            </label>
+                            <input type="submit" value="Calculer" />
+                        </form>
+                        { multiples.length > 0 && (
+                            <ul>
+                                {multiples.map((num, i) => (<li key={i}>{num}</li>))}
+                            </ul>
+                        ) }
+                    </React.Fragment>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <App />,document.getElementById('root')
+        );
+    </script>
+</body>
+
+</html>

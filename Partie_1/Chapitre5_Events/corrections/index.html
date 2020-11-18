@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <style>
+      .btn-margin {
+          margin: 2rem;
+      }
+
+      .display {
+          text-align: center;
+          font-size: 2rem;
+      }
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    class Counter extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          count: 0,
+          active: false
+        };
+        this.interval = null;
+      }
+
+      start = () => {
+        this.setState({active: true});
+        this.interval = setInterval(() => {
+          this.setState({count: this.state.count+this.props.increment});
+        }, 1000);
+      };
+
+      stop = () => {
+        clearInterval(this.interval);
+        this.interval = null;
+        this.setState({active: false});
+      };
+
+      reset = () => {
+        if (this.state.active) this.stop();
+        this.setState({count: 0});
+      };
+
+      render() {
+        return <div>
+          <button className="btn btn-primary btn-margin" onClick={this.start} disabled={this.state.active}>Start (+{this.props.increment})</button>
+          <button className="btn btn-primary btn-margin" onClick={this.stop} disabled={!this.state.active}>Stop</button> 
+          { this.state.count > 0 && <button className="btn btn-primary btn-margin" onClick={this.reset}>Reset</button> }
+          <p className="display">{this.state.count}</p>
+        </div>
+      }
+    }
+
+
+    // Rendu dans le DOM
+    ReactDOM.render(
+        <div>
+          <Counter increment={1} />
+          <Counter increment={2} />  
+        </div>,
+        document.getElementById('root')
+    );
+    </script>
+
+</body>
+</html>

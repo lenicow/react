@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    class App extends React.Component {
+      constructor() {
+        super()
+        this.state = {percentage: 0, price: 100};
+      }
+      componentDidMount() {
+        this.setState((state, props) => ({percentage : 0.2}));
+        this.setState((state, props) => ({percentage : state.percentage + 0.05 }));
+        this.setState((state, props) => ({percentage : state.percentage + 0.05 }));
+      }
+      render(){
+        return (
+            <React.Fragment>
+                <p>Price HT : { this.state.price } </p>
+                <p>Tax : {  this.state.percentage } </p>
+                <Price 
+                  price={this.state.price} 
+                  percentage={this.state.percentage} 
+                />
+            </React.Fragment>
+        );
+      }
+    }
+
+    class Price extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {total: 0};
+      }
+      componentDidMount() {
+        this.setState((state, props) => ({total: props.price * (props.percentage + 1)}));
+        // this.setState((state, props) => ({total: (state.total + 200) * (props.percentage + 1)}));
+        // this.setState((state, props) => ({total: (state.total + 50) * (props.percentage + 1)}));
+      }
+      render(){
+        return (
+          <p>Total : {this.state.total}</p>
+        )
+      }
+    }
+
+
+    // Rendu dans le DOM
+    ReactDOM.render(
+        <App />,
+        document.getElementById('root')
+    );
+    </script>
+
+</body>
+</html>
